@@ -170,18 +170,13 @@ class WhatsAppController {
             e.stopPropagation();
             this.el.menuAttach.addClass('open')
             document.addEventListener('click',this.closeMenuAttach.bind(this));
-            
-               /* ()=>{
-                this.el.menuAttach.removeClass('open')
-                console.log('remove menu');*/
+    
 
         })
         
         this.el.btnAttachPhoto.on('click',e=>{
 
             this.el.inputPhoto.click();
-
-            
 
         })
 
@@ -198,16 +193,68 @@ class WhatsAppController {
         })
 
         this.el.btnAttachCamera.on('click',e=>{
+
+            this.closeAllMainPanel();
+            this.el.panelCamera.addClass('open')
+            this.el.panelCamera.css({
+                'height':'calc(100% - 120px);'
+            })
             
+        })
+
+        this.el.btnClosePanelCamera.on('click',e=>{
+
+            this.closeAllMainPanel()
+            this.el.panelMessagesContainer.show();
+
+        })
+
+        this.el.btnTakePicture.on('click', e=>{
+
+            console.log('take picture');
+
         })
 
         this.el.btnAttachDocument.on('click',e=>{
+
+            this.closeAllMainPanel()
+            this.el.panelDocumentPreview.addClass('open')
+            this.el.panelDocumentPreview.css({
+                'height':'calc(100% - 120px);'
+            })           
            
         })
 
+        this.el.btnClosePanelDocumentPreview.on('click', e =>{
+
+            this.closeAllMainPanel();
+            this.el.panelMessagesContainer.show();
+
+
+        })
+
+        this.el.btnSendDocument.on('click', e=>{
+            console.log('send document')
+        })
+
         this.el.btnAttachContact.on('click',e=>{
+
+            this.el.modalContacts.show()
             
         })
+        
+        this.el.btnCloseModalContacts.on('click', e=>{
+            this.el.modalContacts.hide()
+        })
+
+        
+
+    }
+    closeAllMainPanel(){
+        this.el.panelMessagesContainer.hide();
+        this.el.panelDocumentPreview.removeClass('open');
+        this.el.panelCamera.removeClass('open');
+
 
     }
 
