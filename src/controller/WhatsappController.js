@@ -197,7 +197,7 @@ class WhatsAppController {
             this.closeAllMainPanel();
             this.el.panelCamera.addClass('open')
             this.el.panelCamera.css({
-                'height':'calc(100% - 120px);'
+                'height':'calc(100% - 120px)'
             })
             
         })
@@ -220,7 +220,7 @@ class WhatsAppController {
             this.closeAllMainPanel()
             this.el.panelDocumentPreview.addClass('open')
             this.el.panelDocumentPreview.css({
-                'height':'calc(100% - 120px);'
+                'height':'calc(100% - 120px)'
             })           
            
         })
@@ -242,7 +242,7 @@ class WhatsAppController {
             this.el.modalContacts.show()
             
         })
-        
+
         this.el.btnCloseModalContacts.on('click', e=>{
             this.el.modalContacts.hide()
         })
