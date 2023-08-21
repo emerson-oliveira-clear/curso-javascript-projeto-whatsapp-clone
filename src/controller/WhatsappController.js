@@ -1,6 +1,7 @@
-import { Format } from './../utils/Format.js'
-import { CameraController } from './CameraController.js'
-import { DocumentPreviewController } from './DocumentPreviewController.js'
+import { Format } from './../utils/Format'
+import { CameraController } from './CameraController'
+import { MicrophoneController } from './MicrophoneController'
+import { DocumentPreviewController } from './DocumentPreviewController'
 
 export class WhatsAppController {
     constructor() {
@@ -249,6 +250,10 @@ export class WhatsAppController {
 
             if (this.el.inputDocument.files.length) {
 
+                this.el.panelDocumentPreview.css({
+                    'height': '1'
+                })
+
                 let file = this.el.inputDocument.files[0];
 
                 this._documentPreviewController = new DocumentPreviewController(file);
@@ -260,7 +265,15 @@ export class WhatsAppController {
                     this.el.imagePanelDocumentPreview.show();
                     this.el.FilePanelDocumentPreview.hide();
 
+                    this.el.panelDocumentPreview.css({
+                        'height': 'calc(100% - 120px)'
+                    })
+
                 }).catch(err => {
+
+                    this.el.panelDocumentPreview.css({
+                        'height': 'calc(100% - 120px)'
+                    })
 
                     switch(file.type){
 
@@ -300,12 +313,12 @@ export class WhatsAppController {
 
             this.closeAllMainPanel();
             this.el.panelMessagesContainer.show();
-
+            
 
         })
 
         this.el.btnSendDocument.on('click', e => {
-            console.log('send document')
+           
         })
 
         this.el.btnAttachContact.on('click', e => {
