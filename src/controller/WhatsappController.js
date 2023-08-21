@@ -275,25 +275,25 @@ export class WhatsAppController {
                         'height': 'calc(100% - 120px)'
                     })
 
-                    switch(file.type){
+                    switch (file.type) {
 
                         case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                            case 'application/msword':
-                                this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-doc';
-                                break;
+                        case 'application/msword':
+                            this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-doc';
+                            break;
 
-                            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                            case 'application/vnd.ms-excel':
-                                this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-xls';
-                                break;
+                        case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                        case 'application/vnd.ms-excel':
+                            this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-xls';
+                            break;
 
-                            case 'application/vnd.ms-powerpoint':
-                            case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-                                this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-ppt';
-                                break;
+                        case 'application/vnd.ms-powerpoint':
+                        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                            this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-ppt';
+                            break;
 
-                            default:
-                                this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-generic';
+                        default:
+                            this.el.iconPanelDocumentPreview.classList.value = 'jcxhw icon-doc-generic';
 
                     }
 
@@ -313,12 +313,12 @@ export class WhatsAppController {
 
             this.closeAllMainPanel();
             this.el.panelMessagesContainer.show();
-            
+
 
         })
 
         this.el.btnSendDocument.on('click', e => {
-           
+
         })
 
         this.el.btnAttachContact.on('click', e => {
@@ -337,8 +337,14 @@ export class WhatsAppController {
             this.el.btnSendMicrophone.hide();
             this.startRecordMicrophoneTime();
 
-           this._microphoneController = new MicrophoneController()
+            this._microphoneController = new MicrophoneController()
 
+            this._microphoneController.on('play',musica=>{
+
+                console.log('recebi o evento play',musica)
+            });
+
+            
         })
 
         this.el.btnCancelMicrophone.on('click', e => {
