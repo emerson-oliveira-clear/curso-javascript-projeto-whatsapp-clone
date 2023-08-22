@@ -1,16 +1,64 @@
-import { Format } from './../utils/Format'
-import { CameraController } from './CameraController'
-import { MicrophoneController } from './MicrophoneController'
-import { DocumentPreviewController } from './DocumentPreviewController'
+import { Format } from './../utils/Format';
+import { CameraController } from './CameraController';
+import { MicrophoneController } from './MicrophoneController';
+import { DocumentPreviewController } from './DocumentPreviewController';
+import { Firebase } from './../utils/Firebase';
+import { User } from './../model/User';
 
 export class WhatsAppController {
     constructor() {
 
+        this._firebase = new Firebase();
+        this.initAuth();
         this.elementsPrototype();
         this.loadElements(); // método que transformar id do html em camelCase (propriedades de um objeto)
         this.initEvents();
 
+
     }
+
+    initAuth() {
+        this._firebase.initAuth()
+            .then(response => {
+
+                this._user = new User(response.user.email);
+
+                this._user.on('datachange', data => {
+
+                    document.querySelector('title').innerHTML = data.name + 'WhatsApp Clone'
+
+                    if (data.photo) {
+
+                        let photo = this.el.imgPanelEditProfile
+                        photo.src = data.photo;
+                        photo.show();
+                        this.el.imgDefaultPanelEditProfile.hide();
+
+                        let photo2 = this.el.myPhoto.querySelector('img');
+                        photo2.src = data.photo;
+                        photo2.show();
+
+                    }
+
+                })
+
+                this.el.appContent.css({
+
+                    display: 'flex'
+
+                });
+
+                let userRef = User.findByEmail(response.user.email);
+
+            })
+            .catch(err => {
+
+                console.log('response')
+
+            });
+
+
+    };
 
     loadElements() {
         this.el = {}
@@ -335,24 +383,24 @@ export class WhatsAppController {
 
             this.el.recordMicrophone.show();
             this.el.btnSendMicrophone.hide();
-           
+
 
             this._microphoneController = new MicrophoneController()
 
-            this._microphoneController.on('ready',musica =>{
+            this._microphoneController.on('ready', musica => {
 
                 console.log('ready event');
 
                 this._microphoneController.startRecorder();
             });
 
-            this._microphoneController.on('recordtimer', timer =>{
+            this._microphoneController.on('recordtimer', timer => {
 
                 this.el.recordMicrophoneTimer.innerHTML = Format.toTime(timer);
 
             })
 
-            
+
         })
 
         this.el.btnCancelMicrophone.on('click', e => {
@@ -454,13 +502,13 @@ export class WhatsAppController {
 
     }
 
-    
+
 
     closeRecordMicrophone() {
 
         this.el.recordMicrophone.hide();
         this.el.btnSendMicrophone.show();
-        
+
     }
 
     closeAllMainPanel() {
