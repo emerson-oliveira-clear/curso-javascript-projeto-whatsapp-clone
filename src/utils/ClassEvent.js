@@ -2,20 +2,12 @@ export class classEvent {
 
     constructor() {
 
-        this._events = {
-            play: [
-                ()=>{
-
-                    console.log('a')
-                },
-                
-            ]
-        };
+        this._events = {};
     }
 
     on(eventName,fn){
 
-        if(!this._events[eventName]) this._events[eventName] = new Array();
+        if(!this._events[eventName]) this._events[eventName] = new Array ();
 
         this._events[eventName].push(fn);
 
@@ -32,7 +24,7 @@ export class classEvent {
 
             this._events[eventName].forEach(fn =>{
 
-                fn.apply(null,args,)
+                fn.apply(null,args)
 
             })
 
