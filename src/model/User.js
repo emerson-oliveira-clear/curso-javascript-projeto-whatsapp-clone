@@ -1,14 +1,13 @@
-import { Firebase } from './../utils/Firebase';
-import { MOdel } from './Model';
+import { Firebase } from '../utils/Firebase'
+import { Model } from './Model'
 
+export class User extends Model{
 
-export class User extends MOdel {
+    constructor(id){
 
-    constructor(id) {
+        super();
 
-        super()
-
-        if (id) this.getById(id);
+        if(id) this.getById(id)
 
     }
 
@@ -23,7 +22,7 @@ export class User extends MOdel {
 
     getById(id){
 
-        return new Promise ((s,f )=>{
+        return new Promise ((s,f)=>{
 
             User.findByEmail(id).onSnapshot(doc=>{
 
@@ -39,19 +38,27 @@ export class User extends MOdel {
 
     save(){
 
-        return User.findByEmail(this.email).set(this.toJSON());
+        return User.findByEmail(this.email).set(this.toJSON())
 
     }
 
-    static getRef() {
+    static getRef(){
 
         return Firebase.db().collection('/users');
 
     }
 
-    static findByEmail(email) {
-
+    static findByEmail(email){
         return User.getRef().doc(email)
+    }
+
+    addContact(contact){
+
+        return User.getRef()
+        .doc(this.email)
+        .collection('contacts')
+        .doc(btoa(contact.email))
+        .set(contact.toJSON())
 
     }
 
