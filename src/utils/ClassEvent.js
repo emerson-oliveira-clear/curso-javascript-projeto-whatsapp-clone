@@ -1,4 +1,4 @@
-export class classEvent {
+export class ClassEvent {
 
     constructor() {
 
