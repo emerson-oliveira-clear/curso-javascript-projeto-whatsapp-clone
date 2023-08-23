@@ -4,6 +4,7 @@ import { MicrophoneController } from './MicrophoneController';
 import { DocumentPreviewController } from './DocumentPreviewController';
 import { Firebase } from '../../src/utils/Firebase'
 import { User } from '../model/User'
+import { Chat } from '../model/Chat'
 
 export class WhatsAppController {
     constructor() {
@@ -134,7 +135,6 @@ export class WhatsAppController {
                 </div>
             </div>
                 `
-
                 if(contact.photo){
 
                     let img =div.querySelector('.photo')
@@ -327,10 +327,19 @@ export class WhatsAppController {
 
                 if(data.name){
 
-                    this._user.addContact(contact).then(()=>{
+                    Chat.createIfNotExists(this._user.email, contact.email).then(chat => {
 
-                        this.el.btnClosePanelEditProfile.click()
-                        console.info('Contato foi adicionado!')
+                        contact.chatId = chat.id
+
+                        this._user.chatId = chat.id
+
+                        contact.addContact(this._user)
+
+                        this._user.addContact(contact).then(()=>{
+
+                            this.el.btnClosePanelAddContact.click();
+                            console.info('contato adicionado')
+                        })
 
                     });
 

@@ -20,6 +20,9 @@ export class User extends Model {
     get photo() { return this._data.photo; }
     set photo(value) { this._data.photo = value; }
 
+    get chatId() { return this._data.chatId; }
+    set chatId(value) { this._data.chatId = value }
+
     getById(id) {
 
         return new Promise((s, f) => {
@@ -48,10 +51,10 @@ export class User extends Model {
 
     }
 
-    static getContactsRef(id){
+    static getContactsRef(id) {
         return User.getRef()
-        .doc(id)
-        .collection('/contacts')
+            .doc(id)
+            .collection('/contacts')
     }
 
     static findByEmail(email) {
@@ -60,17 +63,18 @@ export class User extends Model {
 
     addContact(contact) {
 
-        return User.getContactsRef(this.email)
-            .doc(btoa(contact.email))
-            .set(contact.toJSON())
-
+        if (contact != undefined) {
+            return User.getContactsRef(this.email)
+                .doc(btoa(contact.email))
+                .set(contact.toJSON())
+        }
     }
 
-    
-    getContacts(){
-        return new Promise((s,f)=>{
 
-            User.getContactsRef(this.email).onSnapshot(docs =>{
+    getContacts() {
+        return new Promise((s, f) => {
+
+            User.getContactsRef(this.email).onSnapshot(docs => {
 
                 let contacts = [];
 
