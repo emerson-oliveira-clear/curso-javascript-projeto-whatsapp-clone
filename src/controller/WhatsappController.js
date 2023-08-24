@@ -135,6 +135,8 @@ export class WhatsAppController {
                 </div>
             </div>
                 `
+
+                
                 if(contact.photo){
 
                     let img =div.querySelector('.photo')
