@@ -145,6 +145,8 @@ export class WhatsAppController {
 
                 div.on('click', e=>{
 
+                    console.log(contact.chatId);
+
                     this.el.activeName.innerHTML = contact.name;
                     this.el.activeStatus.innerHTML = contact.status;
 

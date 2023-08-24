@@ -1,4 +1,5 @@
 import { Model } from "./Model"
+import { Firebase } from "../../src/utils/Firebase"
 
 export class Chat extends Model{
 
@@ -54,7 +55,7 @@ export class Chat extends Model{
 
     static createIfNotExists(meEmail, contactEmail){
 
-        return new Promise((s, r)=>{
+        return new Promise((s, f)=>{
 
             Chat.find(meEmail, contactEmail).then(chats => {
 
@@ -73,7 +74,7 @@ export class Chat extends Model{
                     })
 
                 }
-            }).catch(err=>{F(err)})
+            }).catch(err=>{f(err)})
 
         })
 
