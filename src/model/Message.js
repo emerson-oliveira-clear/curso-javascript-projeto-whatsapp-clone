@@ -32,7 +32,7 @@ export class Message extends Model {
         switch (this.type) {
             case 'contact':
                 div.innerHTML =
-                `
+                    `
                 <div class="message">
     
                                             <div class="_3_7SH kNKwo tail">
@@ -77,7 +77,7 @@ export class Message extends Model {
 
             case 'image':
                 div.innerHTML =
-                `
+                    `
     
     <div class="_3_7SH _3qMSo">
         <div class="KYpDv">
@@ -99,14 +99,10 @@ export class Message extends Model {
                             </div>
                         </div>
                     </div>
-                    <img src="#" class="_1JVSX message-photo" style="width: 100%; display:none">
+                    <img src="${this.content}" class="_1JVSX message-photo" style="width: 100%; display:none">
                     <div class="_1i3Za"></div>
                 </div>
-                <div class="message-container-legend">
-                    <div class="_3zb-j ZhF0n">
-                        <span dir="ltr" class="selectable-text invisible-space copyable-text message-text">Texto da foto</span>
-                    </div>
-                </div>
+                
                 <div class="_2TvOE">
                     <div class="_1DZAH text-white" role="button">
                         <span class="message-time">17:22</span>
@@ -124,6 +120,19 @@ export class Message extends Model {
         </div>
     </div>
                 `
+                div.querySelector('.message-photo').on('load',e =>{
+
+                    div.querySelector('.message-photo').show()
+                    div.querySelector('._34Olu').hide()
+                    div.querySelector('._3v3PK').css({
+
+                        height:'auto'
+                    
+                    })
+                    
+                    
+                })
+
                 break;
 
             case 'document':
@@ -173,7 +182,7 @@ export class Message extends Model {
 
             case 'audio':
                 div.innerHTML =
-                `
+                    `
     <div class="_3_7SH _17oKL ">
         <div class="_2N_Df LKbsn">
             <div class="_2jfIu">
@@ -254,7 +263,7 @@ export class Message extends Model {
 
             default:
                 div.innerHTML =
-                `
+                    `
     <div class="font-style _3DFk6 tail" id="_${this.id}">
         <span class="tail-container"></span>
         <span class="tail-container highlight"></span>
@@ -275,13 +284,13 @@ export class Message extends Model {
 
         let className = 'message-in'
 
-        if(me){
+        if (me) {
 
-            className ='message-out'
+            className = 'message-out'
 
             div.querySelector('.message-time').parentElement.appendChild(this.getStatusViewElement());
 
-            
+
 
         }
 
@@ -291,9 +300,42 @@ export class Message extends Model {
 
     }
 
+    static sendImage(chatId, from, file) {
+
+        return new Promise((s, f) => {
+
+            let uploadTask = Firebase.hd().ref(from).child(Date.now() + '_' + file.name).put(file);
+
+            uploadTask.on('state_changed', (e) => {
+
+                console.info('upload', e)
+
+            }, err => {
+
+                f(err)
+
+            }, () => {
+
+                uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+                    Message.send(
+                        chatId,
+                        from,
+                        'image',
+                        downloadURL
+                    ).then(() => {
+                        s();
+                    });
+                });
+
+            });
+
+        })
+
+    }
+
     static send(chatId, from, type, content) {
 
-        return new Promise((s,f) =>{
+        return new Promise((s, f) => {
 
             Message.getRef(chatId).add({
                 content,
@@ -301,17 +343,17 @@ export class Message extends Model {
                 status: 'wait',
                 type,
                 from,
-            }).then(result =>{
+            }).then(result => {
 
                 result.parent.doc(result.id).set({
 
                     status: 'sent'
 
-                },{
+                }, {
 
-                    merge:true
+                    merge: true
 
-                }).then(()=>{
+                }).then(() => {
 
                     s();
 
@@ -319,7 +361,7 @@ export class Message extends Model {
             })
 
         })
-        
+
     }
 
     static getRef(chatId) {
@@ -378,8 +420,8 @@ export class Message extends Model {
                 break;
 
             case 'read':
-                div.innerHTML = 
-                `
+                div.innerHTML =
+                    `
                         <span data-icon="msg-dblcheck-ack">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" width="16" height="15">
                                 <path fill="#4FC3F7" d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path>
