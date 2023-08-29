@@ -1,5 +1,5 @@
 import { ClassEvent } from "../utils/ClassEvent";
-
+import { User } from "../model/User";
 export class ContactsController extends ClassEvent {
 
     constructor(modalEl, user) {
