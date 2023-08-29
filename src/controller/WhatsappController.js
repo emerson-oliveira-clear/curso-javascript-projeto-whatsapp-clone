@@ -8,6 +8,7 @@ import { Chat } from '../model/Chat';
 import { Message } from './../model/Message';
 import { Base64 } from "../utils/Base64";
 import { ContactsController } from "./ContactsController";
+import { Upload } from '../utils/Upload';
 
 
 
@@ -18,11 +19,11 @@ export class WhatsAppController {
         this._firebase = new Firebase();
         this.initAuth();
         this.elementsPrototype();
-        this.loadElements(); // método que transformar id do html em camelCase (propriedades de um objeto)
+        this.loadElements();
         this.initEvents();
-
-
     }
+
+    checkNotifications();
 
     initAuth() {
         this._firebase.initAuth()
@@ -115,7 +116,7 @@ export class WhatsAppController {
                         <span dir="auto" title="${contact.name}" class="_1wjpf">${contact.name}</span>
                     </div>
                     <div class="_3Bxar">
-                        <span class="_3T2VG">${contact.lastMessageTime}</span>
+                        <span class="_3T2VG">${Format.timeStampToTime(contact.lastMessageTime)}</span>
                     </div>
                 </div>
                 <div class="_1AwDx">
@@ -210,7 +211,7 @@ export class WhatsAppController {
                 this.viewSize = view.offsetHeight
 
                 let autoScroll = ((scrollTop + view.offsetHeight) >= scrollTopMax)
-                console.log('view:', view)
+
                 if (!this.el.panelMessagesContainer.querySelector('#_' + data.id)) {
                     if (!me) {
                         doc.ref.set({
@@ -261,7 +262,6 @@ export class WhatsAppController {
                 }
             })
 
-            /*
             let msgs = this.el.panelMessagesContainer
             let msgList = msgs.querySelectorAll('.message')
     
@@ -273,11 +273,8 @@ export class WhatsAppController {
                     lastMessage
                 }, {
                     merge: true
-                }
-                )
+                })   
             })
-            */
-
         })
 
     }
@@ -416,6 +413,27 @@ export class WhatsAppController {
             this.el.inputProfilePhoto.click()
 
         });
+
+        this.el.inputProfilePhoto.on('change', e => {
+
+            if (this.el.inputProfilePhoto.files.length > 0) {
+
+                let file = this.el.inputProfilePhoto.files[0];
+
+                Upload.send(file, this._user.email).then(snapshot => {
+
+                    snapshot.ref.getDownloadURL().then(downloadURL => {
+
+                        this._user.photo = downloadURL
+                        this._user.save().then(() => {
+
+                            this.el.btnClosePanelEditProfile.click()
+                        })
+                    })
+                })
+
+            }
+        })
 
         this.el.inputNamePanelEditProfile.on('keypress', e => {
 
@@ -776,7 +794,7 @@ export class WhatsAppController {
         })
         this.el.btnFinishMicrophone.on('click', e => {
 
-            this._microphoneController.on('recorded', (file,metadata)=>{
+            this._microphoneController.on('recorded', (file, metadata) => {
 
                 Message.sendAudio(
                     this._contactActive.chatId,
@@ -784,7 +802,7 @@ export class WhatsAppController {
                     file,
                     metadata,
                     this._user.photo
-                    )
+                )
 
             })
 
